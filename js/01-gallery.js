@@ -3,7 +3,10 @@ import { galleryItems } from './gallery-items.js';
 const galleryRef = document.querySelector('.gallery');
 const itemsMarkup = createItemsImageMarkup(galleryItems);
 
-galleryRef.insertAdjacentHTML('beforeend', itemsMarkup);
+pushMarkupOnHtml();
+galleryRef.addEventListener('click', onGalleryContainerClick);
+
+let instance = '';
 
 function createItemsImageMarkup(items) {
 	return items
@@ -22,10 +25,6 @@ function createItemsImageMarkup(items) {
 		.join('');
 }
 
-galleryRef.addEventListener('click', onGalleryContainerClick);
-
-let instance = '';
-
 function onGalleryContainerClick(e) {
 	e.preventDefault();
 
@@ -33,10 +32,10 @@ function onGalleryContainerClick(e) {
 		return;
 	}
 
+	galleryRef.addEventListener('keydown', onCloseModalWindowKey);
+
 	onOpenModalWindow(e);
 	onCloseModalWindowKey(e);
-
-	galleryRef.addEventListener('keydown', onCloseModalWindowKey);
 }
 
 function onOpenModalWindow(e) {
@@ -50,5 +49,10 @@ function onOpenModalWindow(e) {
 function onCloseModalWindowKey(e) {
 	if (e.code === 'Escape') {
 		instance.close();
+		galleryRef.removeEventListener('keydown', onCloseModalWindowKey);
 	}
+}
+
+function pushMarkupOnHtml() {
+	galleryRef.insertAdjacentHTML('beforeend', itemsMarkup);
 }
